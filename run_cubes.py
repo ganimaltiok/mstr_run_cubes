@@ -362,6 +362,10 @@ def main():
 
     conn = mstr_connect()
 
+    # Note: mstrio's Connection object is thread-safe for issuing independent
+    # REST calls, so we intentionally share a single connection across the
+    # worker threads instead of creating one per cube run.
+
     results = []
     with ThreadPoolExecutor(max_workers=args.max_workers) as pool:
         fut = {pool.submit(run_one, guid, name, run_no, conn): (guid, name) for guid, _, name in items}
